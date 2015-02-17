@@ -14,9 +14,13 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
+import com.parse.SaveCallback;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -28,6 +32,44 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("_Installation");
+       query.getInBackground("8ZLLx67ZgM", new GetCallback<ParseObject>() {
+       public void done(ParseObject object, ParseException e) {
+    if (e == null) {
+           object.put("name","anwar");
+           object.put("Receive",true);
+           object.saveInBackground();
+
+    } else {
+      // something went wrong
+    }
+  }
+});
+         ParseQuery<ParseObject> query2 = ParseQuery.getQuery("_Installation");
+         query2.getInBackground("3qmJG70Bdy", new GetCallback<ParseObject>() {
+       public void done(ParseObject object, ParseException e) {
+    if (e == null) {
+           object.put("name","haitham");
+           object.put("Receive",true);
+           object.saveInBackground(new SaveCallback() {
+               @Override
+               public void done(ParseException e) {
+                   if(e==null)
+                   {
+                       Toast.makeText(getApplicationContext(),"You Can Start Sendding",Toast.LENGTH_SHORT).show();
+                   }
+               }
+           });
+
+    } else {
+      // something went wrong
+    }
+  }
+});
+
+
         send=(Button)findViewById(R.id.Send);
         text=(EditText)findViewById(R.id.pushmeesage);
         dev1=(CheckBox)findViewById(R.id.dev1);
@@ -94,9 +136,11 @@ public class MainActivity extends ActionBarActivity {
         getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
+
         ParseQuery pushQuery = ParseInstallation.getQuery();
         pushQuery.whereEqualTo("Receive", true);
         pushQuery.whereEqualTo("name", name);
+
         ParsePush push = new ParsePush();
         push.setQuery(pushQuery); // Set our Installation query
         push.setMessage(message);

@@ -62,6 +62,7 @@ public class MainActivity extends ActionBarActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
              if(text.getText().toString().isEmpty()==false) {
                  if((dev1checked==true) && (dev2checked==true))
                  {
